@@ -58,30 +58,28 @@
 	>
 </div>
 
-<div class="mt-8 flex-col flex">
-	{#if tasks.length == 0 || sorted_tasks.length == 0}
-		<div />
-	{:else}
-		<div class="bg-slate-900 text-white p-2 rounded-md max-w-fit pr-8">
-			<ul>
-				{#each sorted_tasks as task, i}
-					<li class="list-disc">
-						<div class="flex flex-row my-1 items-center">
-							<p class="mr-1 text-lg font-semibold">{task.name}</p>
-							<p class="text-gray-500">{priority_to_string(task.priority)}</p>
-						</div>
-					</li>
-				{/each}
-			</ul>
-		</div>
-	{/if}
-	<div class="flex flex-col mt-4 p-2 rounded-md ">
-		<p class="mr-1">Include priorit{filter_by.length == 1 ? "y" : "ies"}:</p>
-		{#each ["Low", "Medium", "High"] as priority, i}
-			<label class="">
-				<input type="checkbox" bind:group={filter_by} value={i} />
-				{priority}
-			</label>
-		{/each}
+{#if tasks.length == 0 || sorted_tasks.length == 0}
+	<div />
+{:else}
+	<div class="bg-slate-900 text-white p-2 rounded-md max-w-fit pr-8">
+		<ul>
+			{#each sorted_tasks as task, i}
+				<li class="list-disc">
+					<div class="flex flex-row my-1 items-center">
+						<p class="mr-1 text-lg font-semibold">{task.name}</p>
+						<p class="text-gray-500">{priority_to_string(task.priority)}</p>
+					</div>
+				</li>
+			{/each}
+		</ul>
 	</div>
+{/if}
+<div class="flex flex-col mt-4 p-2 rounded-md ">
+	<p class="mr-1">Include priorit{filter_by.length == 1 ? "y" : "ies"}:</p>
+	{#each ["Low", "Medium", "High"] as priority, i}
+		<label class="">
+			<input type="checkbox" bind:group={filter_by} value={i} />
+			{priority}
+		</label>
+	{/each}
 </div>
