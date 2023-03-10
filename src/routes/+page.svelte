@@ -16,8 +16,9 @@
 	function tasks_in_order_and_age(tasks: Task[], priority: Priority[]) {
 		if (priority) {
 			return tasks.filter((task) => {
-				console.log(priority);
-				return priority.includes(task.priority);
+				for (const p of priority) {
+					if (task.priority == p) return true;
+				}
 			});
 		} else {
 			return tasks;
@@ -30,7 +31,7 @@
 </script>
 
 <h1 class="mt-4 font-bold">Todo list</h1>
-<div class="flex flex-row">
+<div class="flex flex-row mb-2">
 	<input
 		bind:value={name}
 		type="text"
@@ -61,9 +62,9 @@
 {#if tasks.length == 0 || sorted_tasks.length == 0}
 	<div />
 {:else}
-	<div class="bg-slate-900 text-white p-2 rounded-md max-w-fit pr-8">
+	<div class="bg-slate-900 text-white mb-2 p-2 rounded-md max-w-fit pr-8">
 		<ul>
-			{#each sorted_tasks as task, i}
+			{#each tasks_in_order_and_age(tasks, filter_by) as task, i}
 				<li class="list-disc">
 					<div class="flex flex-row my-1 items-center">
 						<p class="mr-1 text-lg font-semibold">{task.name}</p>
@@ -74,7 +75,7 @@
 		</ul>
 	</div>
 {/if}
-<div class="flex flex-col mt-4 p-2 rounded-md ">
+<div class="flex flex-col p-2 rounded-md ">
 	<p class="mr-1">Include priorit{filter_by.length == 1 ? "y" : "ies"}:</p>
 	{#each ["Low", "Medium", "High"] as priority, i}
 		<label class="">
