@@ -59,7 +59,7 @@
 </div>
 
 <div class="mt-8 flex-col flex">
-	{#if tasks.length == 0}
+	{#if tasks.length == 0 || sorted_tasks.length == 0}
 		<div />
 	{:else}
 		<div class="bg-slate-900 text-white p-2 rounded-md max-w-fit pr-8">
