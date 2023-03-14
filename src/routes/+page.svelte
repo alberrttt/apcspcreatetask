@@ -13,11 +13,15 @@
 	function push_task(task: Task) {
 		tasks = [...tasks, task];
 	}
-	function tasks_in_order_and_age(tasks: Task[], priority: Priority[]) {
-		if (priority) {
+	function tasks_in_order_and_age(
+		tasks: Task[],
+		priorities: Priority[] | undefined
+	) {
+		if (priorities != undefined) {
 			return tasks.filter((task) => {
-				for (const p of priority) {
-					if (task.priority == p) return true;
+				// check if that task's priority is in the priority to filter by
+				for (const priority of priorities) {
+					if (task.priority == priority) return true;
 				}
 			});
 		} else {
@@ -25,7 +29,7 @@
 		}
 	}
 
-	$: sorted_tasks = tasks_in_order_and_age(tasks, filter_by);
+	$: len_of_sorted_tasks = tasks_in_order_and_age(tasks, filter_by).length;
 	let priority: string = "Low";
 	let name: string = "";
 </script>
@@ -59,7 +63,8 @@
 	>
 </div>
 
-{#if tasks.length == 0 || sorted_tasks.length == 0}
+{#if tasks.length == 0 || len_of_sorted_tasks == 0}
+	<!-- there are no tasks to display, so create an empty div -->
 	<div />
 {:else}
 	<div class="bg-slate-900 text-white mb-2 p-2 rounded-md max-w-fit pr-8">
@@ -75,8 +80,8 @@
 		</ul>
 	</div>
 {/if}
-<div class="flex flex-col p-2 rounded-md ">
-	<p class="mr-1">Include priorit{filter_by.length == 1 ? "y" : "ies"}:</p>
+<div class="flex flex-col p-2 rounded-md top-56 absolute">
+	<p class="mr-1">Include priorities:</p>
 	{#each ["Low", "Medium", "High"] as priority, i}
 		<label class="">
 			<input type="checkbox" bind:group={filter_by} value={i} />
