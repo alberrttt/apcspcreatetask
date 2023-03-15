@@ -1,18 +1,38 @@
 <script lang="ts">
-	import { bind } from "svelte/internal";
-	import {
-		Priority,
-		priority_to_string,
-		string_to_priority,
-		type Task,
-	} from "../utility";
+	interface Task {
+		name: string;
+		priority: Priority;
+	}
+	enum Priority {
+		Low,
+		Medium,
+		High,
+	}
+
+	function string_to_priority(s: string): Priority {
+		switch (s) {
+			case "Low":
+				return Priority.Low;
+			case "Medium":
+				return Priority.Medium;
+			case "High":
+				return Priority.High;
+		}
+
+		throw new Error("Invalid priority");
+	}
+	function priority_to_string(p: Priority): string {
+		switch (p) {
+			case Priority.Low:
+				return "Low";
+			case Priority.Medium:
+				return "Medium";
+			case Priority.High:
+				return "High";
+		}
+	}
 
 	let tasks = new Array<Task>();
-	let filter_by: Priority[] = [Priority.Low, Priority.Medium, Priority.High];
-
-	function push_task(task: Task) {
-		tasks = [...tasks, task];
-	}
 	function tasks_in_order_and_age(
 		tasks: Task[],
 		priorities: Priority[] | undefined
@@ -28,7 +48,7 @@
 			return tasks;
 		}
 	}
-
+	let filter_by: Priority[] = [Priority.Low, Priority.Medium, Priority.High];
 	$: len_of_sorted_tasks = tasks_in_order_and_age(tasks, filter_by).length;
 	let priority: string = "Low";
 	let name: string = "";
@@ -53,10 +73,15 @@
 	<button
 		class="bg-blue-500 text-white rounded-md p-2"
 		on:click={() => {
-			push_task({
+			// name and priority are variables that are binded to the inputs
+			tasks.push({
 				name,
 				priority: string_to_priority(priority),
 			});
+			// reassign the array to itself
+			// to trigger a re-render
+			tasks = tasks;
+			// reset the inputs
 			name = "";
 			priority = "Low";
 		}}>Add</button
@@ -64,12 +89,12 @@
 </div>
 
 {#if tasks.length == 0 || len_of_sorted_tasks == 0}
-	<!-- there are no tasks to display, so create an empty div -->
+	<!-- there are no tasks to display, so show an empty div -->
 	<div />
 {:else}
 	<div class="bg-slate-900 text-white mb-2 p-2 rounded-md max-w-fit pr-8">
 		<ul>
-			{#each tasks_in_order_and_age(tasks, filter_by) as task, i}
+			{#each tasks_in_order_and_age(tasks, filter_by) as task}
 				<li class="list-disc">
 					<div class="flex flex-row my-1 items-center">
 						<p class="mr-1 text-lg font-semibold">{task.name}</p>
