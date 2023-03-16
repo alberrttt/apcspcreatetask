@@ -30,20 +30,27 @@
 			case Priority.High:
 				return "High";
 		}
+		throw new Error("Invalid priority");
 	}
 
 	let tasks = new Array<Task>();
+
 	function tasks_in_order_and_age(
 		tasks: Task[],
 		priorities: Priority[] | undefined
 	) {
 		if (priorities != undefined) {
-			return tasks.filter((task) => {
-				// check if that task's priority is in the priority to filter by
+			let filtered = new Array<Task>();
+			for (const task of tasks) {
+				// check if that task's priority is one of the chosen priorities
 				for (const priority of priorities) {
-					if (task.priority == priority) return true;
+					if (task.priority == priority) {
+						filtered.push(task);
+						break;
+					}
 				}
-			});
+			}
+			return filtered;
 		} else {
 			return tasks;
 		}
@@ -73,13 +80,13 @@
 	<button
 		class="bg-blue-500 text-white rounded-md p-2"
 		on:click={() => {
-			// name and priority are variables that are binded to the inputs
+			// "name" and "priority" are variables that are binded to the UI inputs
 			tasks.push({
 				name,
 				priority: string_to_priority(priority),
 			});
 			// reassign the array to itself
-			// to trigger a re-render
+			// to trigger a re-render (its how svelte works)
 			tasks = tasks;
 			// reset the inputs
 			name = "";
@@ -94,6 +101,7 @@
 {:else}
 	<div class="bg-slate-900 text-white mb-2 p-2 rounded-md max-w-fit pr-8">
 		<ul>
+			<!-- this statement calls the procedure and iterates through the return value, creating a UI element for each entry -->
 			{#each tasks_in_order_and_age(tasks, filter_by) as task}
 				<li class="list-disc">
 					<div class="flex flex-row my-1 items-center">
