@@ -12,3 +12,6 @@
 		@apply text-2xl;
 	}
 }
+.add-button {
+	@apply bg-blue-500 text-white rounded-md p-2;
+}

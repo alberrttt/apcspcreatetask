@@ -78,7 +78,7 @@
 		<option>High</option>
 	</select>
 	<button
-		class="bg-blue-500 text-white rounded-md p-2"
+		class="add-button"
 		on:click={() => {
 			// "name" and "priority" are variables that are binded to the UI inputs
 			tasks.push({
