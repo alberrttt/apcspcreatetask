@@ -8,7 +8,7 @@
 		Medium,
 		High,
 	}
-
+	// utility functions to convert between the string and enum
 	function string_to_priority(s: string): Priority {
 		switch (s) {
 			case "Low":
@@ -34,11 +34,10 @@
 	}
 
 	let tasks = new Array<Task>();
-
 	function tasks_in_order_and_age(
 		tasks: Task[],
 		priorities: Priority[] | undefined
-	) {
+	): Task[] | undefined {
 		if (priorities != undefined) {
 			let filtered = new Array<Task>();
 			for (const task of tasks) {
@@ -52,11 +51,16 @@
 			}
 			return filtered;
 		} else {
-			return tasks;
+			return undefined;
 		}
 	}
-	let filter_by: Priority[] = [Priority.Low, Priority.Medium, Priority.High];
-	$: len_of_sorted_tasks = tasks_in_order_and_age(tasks, filter_by).length;
+	let filter_by: Priority[] | undefined = [
+		Priority.Low,
+		Priority.Medium,
+		Priority.High,
+	];
+	$: len_of_sorted_tasks = (tasks_in_order_and_age(tasks, filter_by) || [])
+		.length;
 	let priority: string = "Low";
 	let name: string = "";
 </script>
@@ -94,7 +98,6 @@
 		}}>Add</button
 	>
 </div>
-
 {#if tasks.length == 0 || len_of_sorted_tasks == 0}
 	<!-- there are no tasks to display, so show an empty div -->
 	<div />
@@ -102,7 +105,7 @@
 	<div class="bg-slate-900 text-white mb-2 p-2 rounded-md max-w-fit pr-8">
 		<ul>
 			<!-- this statement calls the procedure and iterates through the return value, creating a UI element for each entry -->
-			{#each tasks_in_order_and_age(tasks, filter_by) as task}
+			{#each tasks_in_order_and_age(tasks, filter_by) || [] as task}
 				<li class="list-disc">
 					<div class="flex flex-row my-1 items-center">
 						<p class="mr-1 text-lg font-semibold">{task.name}</p>
@@ -117,7 +120,16 @@
 	<p class="mr-1">Include priorities:</p>
 	{#each ["Low", "Medium", "High"] as priority, i}
 		<label class="">
-			<input type="checkbox" bind:group={filter_by} value={i} />
+			<input
+				type="checkbox"
+				bind:group={filter_by}
+				value={i}
+				on:change={() => {
+					if (filter_by?.length == 0) {
+						filter_by = undefined;
+					}
+				}}
+			/>
 			{priority}
 		</label>
 	{/each}
