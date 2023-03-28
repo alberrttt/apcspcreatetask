@@ -116,6 +116,7 @@
 							class="cursor-pointer"
 							on:click={() => {
 								tasks.splice(i, 1);
+								// svelete needs this to re-render
 								tasks = tasks;
 							}}
 						>
