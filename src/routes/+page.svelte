@@ -38,13 +38,13 @@
 	let tasks = new Array<Task>();
 	function filter_tasks(
 		tasks: Task[],
-		priorities: Priority[] | undefined
+		filter_by: Priority[] | undefined
 	): Task[] {
-		if (priorities != undefined) {
+		if (filter_by != undefined) {
 			let filtered = new Array<Task>();
 			for (const task of tasks) {
 				// check if that task's priority is one of the chosen priorities
-				for (const priority of priorities) {
+				for (const priority of filter_by) {
 					if (task.priority == priority) {
 						filtered.push(task);
 						break;
