@@ -36,33 +36,21 @@
 	}
 
 	let tasks = new Array<Task>();
-	function filter_tasks(
-		tasks: Task[],
-		filter_by: Priority[] | undefined
-	): Task[] {
-		if (filter_by != undefined) {
-			let filtered = new Array<Task>();
-			for (const task of tasks) {
-				// check if that task's priority is one of the chosen priorities
-				for (const priority of filter_by) {
-					if (task.priority == priority) {
-						filtered.push(task);
-						break;
-					}
+	function filter_tasks(tasks: Task[], filter_by: Priority[]): Task[] {
+		let filtered = new Array<Task>();
+		for (const task of tasks) {
+			// check if that task's priority is one of the chosen priorities
+			for (const priority of filter_by) {
+				if (task.priority == priority) {
+					filtered.push(task);
+					break;
 				}
 			}
-			return filtered;
-		} else {
-			return [];
 		}
+		return filtered;
 	}
-	let filter_by: Priority[] | undefined = [
-		Priority.Low,
-		Priority.Medium,
-		Priority.High,
-	];
-	$: len_of_sorted_tasks = (filter_tasks(tasks, filter_by) || [])
-		.length;
+	let filter_by: Priority[] = [Priority.Low, Priority.Medium, Priority.High];
+	$: len_of_sorted_tasks = (filter_tasks(tasks, filter_by) || []).length;
 	let priority: string = "Low";
 	let name: string = "";
 </script>
@@ -135,16 +123,7 @@
 	<p class="mr-1">Include priorities:</p>
 	{#each ["Low", "Medium", "High"] as priority, i}
 		<label class="">
-			<input
-				type="checkbox"
-				bind:group={filter_by}
-				value={i}
-				on:change={() => {
-					if (filter_by?.length == 0) {
-						filter_by = undefined;
-					}
-				}}
-			/>
+			<input type="checkbox" bind:group={filter_by} value={i} />
 			{priority}
 		</label>
 	{/each}
