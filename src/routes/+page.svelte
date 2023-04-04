@@ -5,6 +5,7 @@
 		name: string;
 		priority: Priority;
 	}
+
 	enum Priority {
 		Low,
 		Medium,
@@ -36,21 +37,30 @@
 	}
 
 	let tasks = new Array<Task>();
-	function filter_tasks(tasks: Task[], filter_by: Priority[]): Task[] {
+	function filter_tasks(
+		tasks: Task[],
+		low: boolean,
+		medium: boolean,
+		high: boolean
+	): Task[] {
 		let filtered = new Array<Task>();
-		for (const task of tasks) {
+		for (const [i, task] of tasks.entries()) {
 			// check if that task's priority is one of the chosen priorities
-			for (const priority of filter_by) {
-				if (task.priority == priority) {
-					filtered.push(task);
-					break;
-				}
+			if (task.priority == Priority.Low && low) {
+				filtered[i] = task;
+			} else if (task.priority == Priority.Medium && medium) {
+				filtered.push(task);
+			} else if (task.priority == Priority.High && high) {
+				filtered.push(task);
 			}
 		}
 		return filtered;
 	}
-	let filter_by: Priority[] = [Priority.Low, Priority.Medium, Priority.High];
-	$: len_of_sorted_tasks = (filter_tasks(tasks, filter_by) || []).length;
+	let low = true;
+	let medium = true;
+	let high = true;
+	$: len_of_sorted_tasks = (filter_tasks(tasks, low, medium, high) || [])
+		.length;
 	let priority: string = "Low";
 	let name: string = "";
 </script>
@@ -96,7 +106,7 @@
 	<div class="bg-slate-900 text-white mb-2 p-2 rounded-md max-w-fit">
 		<ul>
 			<!-- this statement calls the procedure and iterates through the return value, creating a UI element for each entry -->
-			{#each filter_tasks(tasks, filter_by) as task, i}
+			{#each filter_tasks(tasks, low, medium, high) as task, i}
 				<li class="list-disc">
 					<div class="flex flex-row my-1 items-center">
 						<div class="flex flex-row items-center">
@@ -121,10 +131,17 @@
 {/if}
 <div class="flex flex-col p-2 rounded-md top-56 absolute">
 	<p class="mr-1">Include priorities:</p>
-	{#each ["Low", "Medium", "High"] as priority, i}
-		<label class="">
-			<input type="checkbox" bind:group={filter_by} value={i} />
-			{priority}
-		</label>
-	{/each}
+
+	<label class="">
+		<input type="checkbox" bind:checked={low} value={true} />
+		Low
+	</label>
+	<label class="">
+		<input type="checkbox" bind:checked={medium} value={true} />
+		Medium
+	</label>
+	<label class="">
+		<input type="checkbox" bind:checked={high} value={true} />
+		High
+	</label>
 </div>
