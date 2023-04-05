@@ -47,11 +47,13 @@
 		for (const [i, task] of tasks.entries()) {
 			// check if that task's priority is one of the chosen priorities
 			if (task.priority == Priority.Low && low) {
-				filtered[i] = task;
-			} else if (task.priority == Priority.Medium && medium) {
-				filtered[i] = task;
-			} else if (task.priority == Priority.High && high) {
-				filtered[i] = task;
+				filtered.push(task);
+			}
+			if (task.priority == Priority.Medium && medium) {
+				filtered.push(task);
+			}
+			if (task.priority == Priority.High && high) {
+				filtered.push(task);
 			}
 		}
 		return filtered;
@@ -59,6 +61,9 @@
 	let low = true;
 	let medium = true;
 	let high = true;
+	$: {
+		console.log(low, medium, high);
+	}
 	$: len_of_sorted_tasks = filter_tasks(tasks, low, medium, high).length;
 	let priority: string = "Low";
 	let name: string = "";
