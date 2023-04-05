@@ -49,9 +49,9 @@
 			if (task.priority == Priority.Low && low) {
 				filtered[i] = task;
 			} else if (task.priority == Priority.Medium && medium) {
-				filtered.push(task);
+				filtered[i] = task;
 			} else if (task.priority == Priority.High && high) {
-				filtered.push(task);
+				filtered[i] = task;
 			}
 		}
 		return filtered;
@@ -59,8 +59,7 @@
 	let low = true;
 	let medium = true;
 	let high = true;
-	$: len_of_sorted_tasks = (filter_tasks(tasks, low, medium, high) || [])
-		.length;
+	$: len_of_sorted_tasks = filter_tasks(tasks, low, medium, high).length;
 	let priority: string = "Low";
 	let name: string = "";
 </script>
@@ -133,15 +132,15 @@
 	<p class="mr-1">Include priorities:</p>
 
 	<label class="">
-		<input type="checkbox" bind:checked={low} value={true} />
+		<input type="checkbox" bind:checked={low} />
 		Low
 	</label>
 	<label class="">
-		<input type="checkbox" bind:checked={medium} value={true} />
+		<input type="checkbox" bind:checked={medium} />
 		Medium
 	</label>
 	<label class="">
-		<input type="checkbox" bind:checked={high} value={true} />
+		<input type="checkbox" bind:checked={high} />
 		High
 	</label>
 </div>
